@@ -1,19 +1,15 @@
 package com.product.service;
 
-import java.util.Collection;
-
 import com.product.model.Product;
 
 public interface ProductService {
 
-	Product createProduct(Product product);
+	void createProduct(Product product);
 
-	Product updateProduct(Long productId, Product product);
+	void updateProduct(Product product);
 
-	Collection<Product> getProductList();
+	Product getProduct(String productId, String sku);
 
-	Product getProductById(Long productId);
-
-	void deleteProduct(Long productId);
+	void deleteProduct(String productId, String sku);
 
 }

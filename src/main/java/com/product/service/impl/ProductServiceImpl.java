@@ -1,42 +1,36 @@
 package com.product.service.impl;
 
-import java.util.Collection;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.product.dynamodb.DynamoDBRepository;
 import com.product.model.Product;
 import com.product.service.ProductService;
-import com.product.util.ProductUtil;
 
 @Service
 public class ProductServiceImpl implements ProductService {
 
+	@Autowired
+	private DynamoDBRepository repository;
+	
 	@Override
-	public Product createProduct(Product product) {
-		return ProductUtil.productMap.put(product.getId(), product);
+	public void createProduct(Product product) {
+		repository.save(product);
 	}
 
 	@Override
-	public Product updateProduct(Long productId, Product product) {
-		ProductUtil.productMap.remove(productId);
-		product.setId(productId);
-		return ProductUtil.productMap.put(productId, product);
+	public void updateProduct(Product product) {
+		repository.update(product);
 	}
 
 	@Override
-	public Collection<Product> getProductList() {
-		return ProductUtil.productMap.values();
+	public Product getProduct(String productId, String sku) {
+		return repository.getProduct(productId, sku);
 	}
 
 	@Override
-	public Product getProductById(Long productId) {
-		return ProductUtil.productMap.get(productId);
-	}
-
-	@Override
-	public void deleteProduct(Long productId) {
-		ProductUtil.productMap.remove(productId);
-
+	public void deleteProduct(String productId, String sku) {
+		repository.delete(productId, sku);
 	}
 
 }

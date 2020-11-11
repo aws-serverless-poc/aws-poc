@@ -1,7 +1,5 @@
 package com.product.controller;
 
-import java.util.Collection;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,36 +26,29 @@ public class ProductController {
 	private ProductService productService;
 	
 	@PostMapping("/create")
-	public ResponseEntity<Product> createProduct(@RequestBody Product product) {
-		Product productObj = productService.createProduct(product);
-		LOGGER.info("Product:{} created successfully.", productObj);
-		return new ResponseEntity<>(productObj, HttpStatus.CREATED);
+	public ResponseEntity<Object> createProduct(@RequestBody Product product) {
+		productService.createProduct(product);
+		LOGGER.info("Product:{} created successfully.");
+		return new ResponseEntity<>("Product has been saved successfully.", HttpStatus.CREATED);
 	}
 	
-	@PutMapping("/update/{productId}")
-	public ResponseEntity<Product> updateProduct(@PathVariable("productId") Long productId, @RequestBody Product product) {
-		Product updatedProduct = productService.updateProduct(productId, product);
-		LOGGER.info("Product:{} updated successfully.", updatedProduct.toString());
-		return new ResponseEntity<>(updatedProduct, HttpStatus.OK);
+	@PutMapping("/update")
+	public ResponseEntity<Object> updateProduct(@RequestBody Product product) {
+		productService.updateProduct(product);
+		LOGGER.info("Product has been updated successfully.");
+		return new ResponseEntity<>("Product has been updated successfully.", HttpStatus.OK);
 	}
 	
-	@GetMapping(value = "/find/productId")
-	public ResponseEntity<Product> getProduct(@PathVariable("productId") Long productId) {
-		Product product = productService.getProductById(productId);
+	@GetMapping(value = "/find/{productId}/{sku}")
+	public ResponseEntity<Product> getProduct(@PathVariable("productId") String productId, @PathVariable("sku") String sku) {
+		Product product = productService.getProduct(productId, sku);
 		LOGGER.info("Product:{} found with productId:{}", product, productId);
 		return new ResponseEntity<>(product, HttpStatus.OK);
 	}
 
-	@GetMapping(value = "/productlist")
-	public Collection<Product> getProduct() {
-		Collection<Product> productList = productService.getProductList();
-		LOGGER.info("Product list size:{}", productList.size());
-		return productList;
-	}
-
-	@DeleteMapping("/delete/{productId}")
-	public ResponseEntity<Void> deleteProduct(@PathVariable("productId") Long productId) {
-		productService.deleteProduct(productId);
+	@DeleteMapping("/delete/{productId}/{sku}")
+	public ResponseEntity<Void> deleteProduct(@PathVariable("productId") String productId, @PathVariable("sku") String sku) {
+		productService.deleteProduct(productId, sku);
 		LOGGER.info("Product with productId:{} is deleted successfully.", productId);
 		return ResponseEntity.noContent().build();
 	}
